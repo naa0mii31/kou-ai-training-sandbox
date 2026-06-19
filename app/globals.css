@@ -212,32 +212,26 @@ h2 {
   margin-top: 18px;
 }
 
-.budget-layout {
+.lesson-layout {
   display: grid;
   grid-template-columns: minmax(0, 1.2fr) minmax(260px, 0.8fr);
   gap: 18px;
 }
 
-.expense-form {
+.child-form {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr) auto;
   gap: 14px;
+  align-items: end;
 }
 
-.expense-form .wide {
-  grid-column: 1 / -1;
-}
-
-.expense-form button {
-  grid-column: 1 / -1;
-}
-
-.summary-panel {
+.lesson-summary {
   display: grid;
-  gap: 14px;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
 }
 
-.total-card {
+.lesson-summary div {
   display: grid;
   gap: 6px;
   border-radius: 8px;
@@ -246,67 +240,73 @@ h2 {
   padding: 18px;
 }
 
-.total-card span {
+.lesson-summary span {
   color: #b8cbc4;
 }
 
-.total-card strong {
+.lesson-summary strong {
   font-size: 2rem;
 }
 
-.filters {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-
-.category-summary {
-  display: grid;
-  gap: 8px;
-}
-
-.category-summary div {
-  display: flex;
-  justify-content: space-between;
-  border-bottom: 1px solid var(--line);
-  padding: 8px 0;
-}
-
-.expense-list {
+.children-list {
   display: grid;
   gap: 10px;
   margin-top: 18px;
 }
 
-.expense-item {
-  display: flex;
-  justify-content: space-between;
-  gap: 18px;
-  align-items: center;
+.child-item {
+  display: grid;
+  gap: 14px;
   border: 1px solid var(--line);
   border-radius: 8px;
   padding: 14px;
 }
 
-.expense-item div {
-  display: grid;
-  gap: 4px;
+.child-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
 }
 
-.expense-item span,
-.expense-item small {
+.child-heading h3 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.child-heading span {
   color: var(--muted);
+  font-size: 0.9rem;
 }
 
-.expense-actions {
-  justify-items: end;
+.lesson-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: end;
 }
 
-.expense-actions button {
-  min-height: 34px;
-  background: #eef2ef;
-  color: var(--ink);
-  padding: 0 12px;
+.lesson-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lesson-list li {
+  border: 1px solid #91cdbb;
+  border-radius: 8px;
+  background: var(--accent-soft);
+  padding: 8px 10px;
+  font-weight: 700;
+}
+
+.empty-state {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.7;
 }
 
 .roadmap-list {
@@ -338,7 +338,7 @@ h2 {
 @media (max-width: 820px) {
   .intro-band,
   .workspace-grid,
-  .budget-layout,
+  .lesson-layout,
   .roadmap-list {
     grid-template-columns: 1fr;
   }
@@ -350,17 +350,9 @@ h2 {
     padding: 20px;
   }
 
-  .expense-form,
-  .filters {
+  .child-form,
+  .lesson-form,
+  .lesson-summary {
     grid-template-columns: 1fr;
-  }
-
-  .expense-item {
-    align-items: start;
-    flex-direction: column;
-  }
-
-  .expense-actions {
-    justify-items: start;
   }
 }
