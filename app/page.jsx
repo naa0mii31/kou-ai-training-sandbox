@@ -2,6 +2,9 @@
 
 import { useState } from "react";
 import {
+  createExpense
+} from "../src/budget.js";
+import {
   addChild,
   addLesson,
   listLessonsForChild
@@ -36,9 +39,18 @@ const issueSeeds = [
 export default function Home() {
   const [children, setChildren] = useState([]);
   const [lessons, setLessons] = useState([]);
+  const [expenses, setExpenses] = useState([]);
   const [childName, setChildName] = useState("");
   const [lessonForms, setLessonForms] = useState({});
+  const [expenseForm, setExpenseForm] = useState({
+    childId: "",
+    lessonId: "",
+    amount: "",
+    paidAt: new Date().toISOString().slice(0, 10),
+    note: ""
+  });
   const [completedSteps, setCompletedSteps] = useState([]);
+  const selectedChildLessons = listLessonsForChild(lessons, expenseForm.childId);
 
   function registerChild(event) {
     event.preventDefault();
@@ -47,6 +59,9 @@ export default function Home() {
     setChildren((current) => addChild(current, { id, name: childName }));
     setChildName("");
     setLessonForms((current) => ({ ...current, [id]: "" }));
+    setExpenseForm((current) => (
+      current.childId ? current : { ...current, childId: id, lessonId: "" }
+    ));
   }
 
   function updateLessonForm(childId, name) {
@@ -57,12 +72,55 @@ export default function Home() {
     event.preventDefault();
 
     const name = lessonForms[childId] || "";
+    const id = `lesson-${Date.now()}`;
     setLessons((current) => addLesson(children, current, {
-      id: `lesson-${Date.now()}`,
+      id,
       childId,
       name
     }));
+    setExpenseForm((current) => (
+      current.childId === childId && !current.lessonId
+        ? { ...current, lessonId: id }
+        : current
+    ));
     updateLessonForm(childId, "");
+  }
+
+  function updateExpenseChild(childId) {
+    const childLessons = listLessonsForChild(lessons, childId);
+
+    setExpenseForm((current) => ({
+      ...current,
+      childId,
+      lessonId: childLessons[0]?.id || ""
+    }));
+  }
+
+  function updateExpenseForm(field, value) {
+    setExpenseForm((current) => ({ ...current, [field]: value }));
+  }
+
+  function registerExpense(event) {
+    event.preventDefault();
+
+    const expense = createExpense({
+      ...expenseForm,
+      id: `expense-${Date.now()}`
+    });
+    setExpenses((current) => [expense, ...current]);
+    setExpenseForm((current) => ({
+      ...current,
+      amount: "",
+      note: ""
+    }));
+  }
+
+  function findChildName(childId) {
+    return children.find((child) => child.id === childId)?.name || "未登録の子供";
+  }
+
+  function findLessonName(lessonId) {
+    return lessons.find((lesson) => lesson.id === lessonId)?.name || "未登録の習い事";
   }
 
   function toggleStep(index) {
@@ -200,6 +258,88 @@ export default function Home() {
               </article>
             );
           })}
+        </div>
+
+        <div className="expense-section">
+          <div className="panel-heading">
+            <p className="eyebrow">Issue #2</p>
+            <h2>支出入力</h2>
+          </div>
+          <form className="expense-form" onSubmit={registerExpense}>
+            <label>
+              子供
+              <select
+                value={expenseForm.childId}
+                onChange={(event) => updateExpenseChild(event.target.value)}
+                required
+              >
+                <option value="">子供を選択</option>
+                {children.map((child) => (
+                  <option key={child.id} value={child.id}>{child.name}</option>
+                ))}
+              </select>
+            </label>
+            <label>
+              習い事
+              <select
+                value={expenseForm.lessonId}
+                onChange={(event) => updateExpenseForm("lessonId", event.target.value)}
+                disabled={!expenseForm.childId || selectedChildLessons.length === 0}
+                required
+              >
+                <option value="">習い事を選択</option>
+                {selectedChildLessons.map((lesson) => (
+                  <option key={lesson.id} value={lesson.id}>{lesson.name}</option>
+                ))}
+              </select>
+            </label>
+            <label>
+              金額
+              <input
+                type="number"
+                min="0"
+                value={expenseForm.amount}
+                onChange={(event) => updateExpenseForm("amount", event.target.value)}
+                placeholder="例: 1500"
+                required
+              />
+            </label>
+            <label>
+              日付
+              <input
+                type="date"
+                value={expenseForm.paidAt}
+                onChange={(event) => updateExpenseForm("paidAt", event.target.value)}
+                required
+              />
+            </label>
+            <label className="wide">
+              メモ
+              <input
+                value={expenseForm.note}
+                onChange={(event) => updateExpenseForm("note", event.target.value)}
+                placeholder="例: チケット5回"
+              />
+            </label>
+            <button type="submit" disabled={!expenseForm.childId || !expenseForm.lessonId}>
+              支出を追加
+            </button>
+          </form>
+
+          <div className="expense-list">
+            {expenses.length === 0 ? (
+              <p className="empty-state">支出を追加すると、ここに一覧が表示されます。</p>
+            ) : null}
+            {expenses.map((expense) => (
+              <article key={expense.id} className="expense-item">
+                <div>
+                  <strong>{findChildName(expense.childId)} / {findLessonName(expense.lessonId)}</strong>
+                  <span>{expense.amount.toLocaleString()}円 / {expense.paidAt}</span>
+                  {expense.note ? <small>{expense.note}</small> : null}
+                </div>
+              </article>
+            ))}
+          </div>
         </div>
       </section>
 

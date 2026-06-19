@@ -2,53 +2,73 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   createExpense,
-  filterExpenses,
-  summarizeByCategory,
   totalExpenses
 } from "../src/budget.js";
 
 const expenses = [
-  { id: "1", title: "Lunch", amount: 900, category: "Food", date: "2026-06-01" },
-  { id: "2", title: "Book", amount: 1800, category: "Learning", date: "2026-06-02" },
-  { id: "3", title: "Train", amount: 420, category: "Transport", date: "2026-05-30" }
+  { id: "1", childId: "child-1", lessonId: "lesson-1", amount: 900, paidAt: "2026-06-01" },
+  { id: "2", childId: "child-1", lessonId: "lesson-2", amount: 1800, paidAt: "2026-06-02" },
+  { id: "3", childId: "child-2", lessonId: "lesson-3", amount: 420, paidAt: "2026-05-30" }
 ];
 
-test("createExpense trims title and normalizes amount", () => {
+test("createExpense returns a child and lesson based expense", () => {
   assert.deepEqual(createExpense({
     id: "expense-test",
-    title: "  Coffee  ",
+    childId: "  child-1  ",
+    lessonId: "  lesson-1  ",
     amount: "380.4",
-    category: "Food",
-    date: "2026-06-02"
+    paidAt: "  2026-06-02  ",
+    note: "  チケット5回  "
   }), {
     id: "expense-test",
-    title: "Coffee",
+    childId: "child-1",
+    lessonId: "lesson-1",
     amount: 380,
-    category: "Food",
-    date: "2026-06-02",
-    note: ""
+    paidAt: "2026-06-02",
+    note: "チケット5回"
   });
 });
 
-test("createExpense requires a title", () => {
-  assert.throws(() => createExpense({ title: "", amount: 100 }), /title is required/);
+test("createExpense allows an empty note", () => {
+  assert.equal(createExpense({
+    id: "expense-test",
+    childId: "child-1",
+    lessonId: "lesson-1",
+    amount: 1000,
+    paidAt: "2026-06-02"
+  }).note, "");
+});
+
+test("createExpense requires childId", () => {
+  assert.throws(() => createExpense({
+    id: "expense-test",
+    childId: "",
+    lessonId: "lesson-1",
+    amount: 1000,
+    paidAt: "2026-06-02"
+  }), /childId is required/);
+});
+
+test("createExpense requires lessonId", () => {
+  assert.throws(() => createExpense({
+    id: "expense-test",
+    childId: "child-1",
+    lessonId: "",
+    amount: 1000,
+    paidAt: "2026-06-02"
+  }), /lessonId is required/);
+});
+
+test("createExpense requires paidAt", () => {
+  assert.throws(() => createExpense({
+    id: "expense-test",
+    childId: "child-1",
+    lessonId: "lesson-1",
+    amount: 1000,
+    paidAt: ""
+  }), /paidAt is required/);
 });
 
 test("totalExpenses returns the sum of amounts", () => {
   assert.equal(totalExpenses(expenses), 3120);
-});
-
-test("summarizeByCategory returns category totals", () => {
-  assert.deepEqual(summarizeByCategory(expenses), {
-    Food: 900,
-    Learning: 1800,
-    Transport: 420
-  });
-});
-
-test("filterExpenses filters by category and month", () => {
-  assert.deepEqual(
-    filterExpenses(expenses, { category: "Food", month: "2026-06" }).map((expense) => expense.id),
-    ["1"]
-  );
 });
