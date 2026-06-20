@@ -39,7 +39,10 @@ const issueSeeds = [
   "PRレビュー用チェックリストを追加する"
 ];
 
-const currentMonth = new Date().toISOString().slice(0, 7);
+const minPaidAt = "2000-01-01";
+const maxPaidAt = "2100-12-31";
+const today = formatDateInputValue(new Date());
+const currentMonth = today.slice(0, 7);
 
 export default function Home() {
   const [children, setChildren] = useState([]);
@@ -52,7 +55,7 @@ export default function Home() {
     childId: "",
     lessonId: "",
     amount: "",
-    paidAt: new Date().toISOString().slice(0, 10),
+    paidAt: today,
     note: ""
   });
   const [completedSteps, setCompletedSteps] = useState([]);
@@ -349,6 +352,8 @@ export default function Home() {
               日付
               <input
                 type="date"
+                min={minPaidAt}
+                max={maxPaidAt}
                 value={expenseForm.paidAt}
                 onChange={(event) => updateExpenseForm("paidAt", event.target.value)}
                 onInput={(event) => updateExpenseForm("paidAt", event.currentTarget.value)}
@@ -405,4 +410,12 @@ export default function Home() {
       </section>
     </main>
   );
+}
+
+function formatDateInputValue(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
 }

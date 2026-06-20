@@ -79,6 +79,16 @@ test("createExpense requires paidAt", () => {
   }), /paidAt is required/);
 });
 
+test("createExpense rejects an invalid paidAt format", () => {
+  assert.throws(() => createExpense({
+    id: "expense-test",
+    childId: "child-1",
+    lessonId: "lesson-1",
+    amount: 1000,
+    paidAt: "1000-06-20"
+  }), /paidAt year must be between 2000 and 2100/);
+});
+
 test("totalExpenses returns the sum of amounts", () => {
   assert.equal(totalExpenses(expenses), 3120);
 });

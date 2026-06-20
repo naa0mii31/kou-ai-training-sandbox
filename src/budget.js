@@ -10,7 +10,7 @@ export function createExpense(input) {
   const id = normalizeRequiredString(input.id, "id");
   const childId = normalizeRequiredString(input.childId, "childId");
   const lessonId = normalizeRequiredString(input.lessonId, "lessonId");
-  const paidAt = normalizeRequiredString(input.paidAt, "paidAt");
+  const paidAt = normalizePaidAt(input.paidAt);
 
   return {
     id,
@@ -55,4 +55,20 @@ function normalizeRequiredString(value, fieldName) {
   }
 
   return normalizedValue;
+}
+
+function normalizePaidAt(value) {
+  const paidAt = normalizeRequiredString(value, "paidAt");
+
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(paidAt)) {
+    throw new Error("paidAt must be YYYY-MM-DD");
+  }
+
+  const year = Number(paidAt.slice(0, 4));
+
+  if (year < 2000 || year > 2100) {
+    throw new Error("paidAt year must be between 2000 and 2100");
+  }
+
+  return paidAt;
 }
