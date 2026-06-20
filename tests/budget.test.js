@@ -2,6 +2,8 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   createExpense,
+  filterByMonth,
+  totalByMonth,
   totalExpenses
 } from "../src/budget.js";
 
@@ -71,4 +73,23 @@ test("createExpense requires paidAt", () => {
 
 test("totalExpenses returns the sum of amounts", () => {
   assert.equal(totalExpenses(expenses), 3120);
+});
+
+test("filterByMonth returns expenses paid in the selected month", () => {
+  assert.deepEqual(
+    filterByMonth(expenses, "2026-06").map((expense) => expense.id),
+    ["1", "2"]
+  );
+});
+
+test("filterByMonth returns an empty list when the month has no expenses", () => {
+  assert.deepEqual(filterByMonth(expenses, "2026-07"), []);
+});
+
+test("totalByMonth returns the total for the selected month", () => {
+  assert.equal(totalByMonth(expenses, "2026-06"), 2700);
+});
+
+test("totalByMonth returns 0 when the month has no expenses", () => {
+  assert.equal(totalByMonth(expenses, "2026-07"), 0);
 });
