@@ -4,6 +4,7 @@ import { useState } from "react";
 import {
   createExpense,
   filterByMonth,
+  summarizeByChild,
   totalByMonth
 } from "../src/budget.js";
 import {
@@ -58,6 +59,7 @@ export default function Home() {
   const selectedChildLessons = listLessonsForChild(lessons, expenseForm.childId);
   const selectedMonthExpenses = filterByMonth(expenses, selectedMonth);
   const selectedMonthTotal = totalByMonth(expenses, selectedMonth);
+  const childSummary = summarizeByChild(selectedMonthExpenses, children);
 
   function registerChild(event) {
     event.preventDefault();
@@ -286,6 +288,23 @@ export default function Home() {
                 onInput={(event) => setSelectedMonth(event.currentTarget.value)}
               />
             </label>
+          </div>
+          <div className="child-total-section">
+            <div className="panel-heading">
+              <p className="eyebrow">Issue #4</p>
+              <h2>子供別合計</h2>
+            </div>
+            <div className="child-total-list">
+              {children.length === 0 ? (
+                <p className="empty-state">子供を追加すると、ここに子供別合計が表示されます。</p>
+              ) : null}
+              {children.map((child) => (
+                <div key={child.id} className="child-total-item">
+                  <span>{child.name}</span>
+                  <strong>{(childSummary[child.id] || 0).toLocaleString()}円</strong>
+                </div>
+              ))}
+            </div>
           </div>
           <form className="expense-form" onSubmit={registerExpense}>
             <label>

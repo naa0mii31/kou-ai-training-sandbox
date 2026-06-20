@@ -36,6 +36,17 @@ export function totalByMonth(expenses, month) {
   return totalExpenses(filterByMonth(expenses, month));
 }
 
+export function totalByChild(expenses, childId) {
+  return totalExpenses(expenses.filter((expense) => expense.childId === childId));
+}
+
+export function summarizeByChild(expenses, children) {
+  return children.reduce((summary, child) => ({
+    ...summary,
+    [child.id]: totalByChild(expenses, child.id)
+  }), {});
+}
+
 function normalizeRequiredString(value, fieldName) {
   const normalizedValue = String(value || "").trim();
 

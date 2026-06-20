@@ -3,9 +3,17 @@ import assert from "node:assert/strict";
 import {
   createExpense,
   filterByMonth,
+  summarizeByChild,
+  totalByChild,
   totalByMonth,
   totalExpenses
 } from "../src/budget.js";
+
+const children = [
+  { id: "child-1", name: "長男" },
+  { id: "child-2", name: "長女" },
+  { id: "child-3", name: "次男" }
+];
 
 const expenses = [
   { id: "1", childId: "child-1", lessonId: "lesson-1", amount: 900, paidAt: "2026-06-01" },
@@ -92,4 +100,20 @@ test("totalByMonth returns the total for the selected month", () => {
 
 test("totalByMonth returns 0 when the month has no expenses", () => {
   assert.equal(totalByMonth(expenses, "2026-07"), 0);
+});
+
+test("totalByChild returns the total for the selected child", () => {
+  assert.equal(totalByChild(expenses, "child-1"), 2700);
+});
+
+test("totalByChild returns 0 when the child has no expenses", () => {
+  assert.equal(totalByChild(expenses, "child-3"), 0);
+});
+
+test("summarizeByChild returns totals for each child", () => {
+  assert.deepEqual(summarizeByChild(expenses, children), {
+    "child-1": 2700,
+    "child-2": 420,
+    "child-3": 0
+  });
 });
