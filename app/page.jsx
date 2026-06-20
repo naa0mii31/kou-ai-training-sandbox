@@ -5,6 +5,7 @@ import {
   createExpense,
   filterByMonth,
   summarizeByChild,
+  summarizeByLesson,
   totalByMonth
 } from "../src/budget.js";
 import {
@@ -63,6 +64,7 @@ export default function Home() {
   const selectedMonthExpenses = filterByMonth(expenses, selectedMonth);
   const selectedMonthTotal = totalByMonth(expenses, selectedMonth);
   const childSummary = summarizeByChild(selectedMonthExpenses, children);
+  const lessonSummary = summarizeByLesson(selectedMonthExpenses, lessons);
 
   function registerChild(event) {
     event.preventDefault();
@@ -305,6 +307,23 @@ export default function Home() {
                 <div key={child.id} className="child-total-item">
                   <span>{child.name}</span>
                   <strong>{(childSummary[child.id] || 0).toLocaleString()}円</strong>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="lesson-total-section">
+            <div className="panel-heading">
+              <p className="eyebrow">Issue #5</p>
+              <h2>習い事別合計</h2>
+            </div>
+            <div className="lesson-total-list">
+              {lessons.length === 0 ? (
+                <p className="empty-state">習い事を追加すると、ここに習い事別合計が表示されます。</p>
+              ) : null}
+              {lessons.map((lesson) => (
+                <div key={lesson.id} className="lesson-total-item">
+                  <span>{findChildName(lesson.childId)} - {lesson.name}</span>
+                  <strong>{(lessonSummary[lesson.id] || 0).toLocaleString()}円</strong>
                 </div>
               ))}
             </div>

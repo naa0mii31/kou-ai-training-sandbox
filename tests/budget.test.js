@@ -4,7 +4,9 @@ import {
   createExpense,
   filterByMonth,
   summarizeByChild,
+  summarizeByLesson,
   totalByChild,
+  totalByLesson,
   totalByMonth,
   totalExpenses
 } from "../src/budget.js";
@@ -13,6 +15,13 @@ const children = [
   { id: "child-1", name: "長男" },
   { id: "child-2", name: "長女" },
   { id: "child-3", name: "次男" }
+];
+
+const lessons = [
+  { id: "lesson-1", childId: "child-1", name: "水泳" },
+  { id: "lesson-2", childId: "child-1", name: "ピアノ" },
+  { id: "lesson-3", childId: "child-2", name: "ピアノ" },
+  { id: "lesson-4", childId: "child-2", name: "アート" }
 ];
 
 const expenses = [
@@ -125,5 +134,22 @@ test("summarizeByChild returns totals for each child", () => {
     "child-1": 2700,
     "child-2": 420,
     "child-3": 0
+  });
+});
+
+test("totalByLesson returns the total for the selected lesson", () => {
+  assert.equal(totalByLesson(expenses, "lesson-2"), 1800);
+});
+
+test("totalByLesson returns 0 when the lesson has no expenses", () => {
+  assert.equal(totalByLesson(expenses, "lesson-4"), 0);
+});
+
+test("summarizeByLesson returns totals for each lesson", () => {
+  assert.deepEqual(summarizeByLesson(expenses, lessons), {
+    "lesson-1": 900,
+    "lesson-2": 1800,
+    "lesson-3": 420,
+    "lesson-4": 0
   });
 });

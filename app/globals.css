@@ -340,16 +340,19 @@ h2 {
   font-size: 2.4rem;
 }
 
-.child-total-section {
+.child-total-section,
+.lesson-total-section {
   margin-bottom: 18px;
 }
 
-.child-total-list {
+.child-total-list,
+.lesson-total-list {
   display: grid;
   gap: 10px;
 }
 
-.child-total-item {
+.child-total-item,
+.lesson-total-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -359,11 +362,13 @@ h2 {
   padding: 14px;
 }
 
-.child-total-item span {
+.child-total-item span,
+.lesson-total-item span {
   font-weight: 700;
 }
 
-.child-total-item strong {
+.child-total-item strong,
+.lesson-total-item strong {
   color: var(--accent);
   font-size: 1.3rem;
 }
