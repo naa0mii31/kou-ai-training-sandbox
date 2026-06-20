@@ -315,6 +315,31 @@ h2 {
   padding-top: 24px;
 }
 
+.month-summary {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 0.35fr);
+  gap: 14px;
+  align-items: end;
+  margin-bottom: 18px;
+}
+
+.monthly-total {
+  display: grid;
+  gap: 6px;
+  border-radius: 8px;
+  background: #172822;
+  color: #fff;
+  padding: 18px;
+}
+
+.monthly-total span {
+  color: #b8cbc4;
+}
+
+.monthly-total strong {
+  font-size: 2.4rem;
+}
+
 .expense-form {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -392,6 +417,7 @@ h2 {
   .child-form,
   .expense-form,
   .lesson-form,
+  .month-summary,
   .lesson-summary {
     grid-template-columns: 1fr;
   }

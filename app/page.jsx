@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import {
-  createExpense
+  createExpense,
+  filterByMonth,
+  totalByMonth
 } from "../src/budget.js";
 import {
   addChild,
@@ -36,10 +38,13 @@ const issueSeeds = [
   "PRレビュー用チェックリストを追加する"
 ];
 
+const currentMonth = new Date().toISOString().slice(0, 7);
+
 export default function Home() {
   const [children, setChildren] = useState([]);
   const [lessons, setLessons] = useState([]);
   const [expenses, setExpenses] = useState([]);
+  const [selectedMonth, setSelectedMonth] = useState(currentMonth);
   const [childName, setChildName] = useState("");
   const [lessonForms, setLessonForms] = useState({});
   const [expenseForm, setExpenseForm] = useState({
@@ -51,6 +56,8 @@ export default function Home() {
   });
   const [completedSteps, setCompletedSteps] = useState([]);
   const selectedChildLessons = listLessonsForChild(lessons, expenseForm.childId);
+  const selectedMonthExpenses = filterByMonth(expenses, selectedMonth);
+  const selectedMonthTotal = totalByMonth(expenses, selectedMonth);
 
   function registerChild(event) {
     event.preventDefault();
@@ -262,8 +269,23 @@ export default function Home() {
 
         <div className="expense-section">
           <div className="panel-heading">
-            <p className="eyebrow">Issue #2</p>
+            <p className="eyebrow">Issue #2 - #3</p>
             <h2>支出入力</h2>
+          </div>
+          <div className="month-summary">
+            <div className="monthly-total">
+              <span>選択中の月の合計</span>
+              <strong>{selectedMonthTotal.toLocaleString()}円</strong>
+            </div>
+            <label>
+              月
+              <input
+                type="month"
+                value={selectedMonth}
+                onChange={(event) => setSelectedMonth(event.target.value)}
+                onInput={(event) => setSelectedMonth(event.currentTarget.value)}
+              />
+            </label>
           </div>
           <form className="expense-form" onSubmit={registerExpense}>
             <label>
@@ -310,6 +332,7 @@ export default function Home() {
                 type="date"
                 value={expenseForm.paidAt}
                 onChange={(event) => updateExpenseForm("paidAt", event.target.value)}
+                onInput={(event) => updateExpenseForm("paidAt", event.currentTarget.value)}
                 required
               />
             </label>
@@ -327,10 +350,10 @@ export default function Home() {
           </form>
 
           <div className="expense-list">
-            {expenses.length === 0 ? (
-              <p className="empty-state">支出を追加すると、ここに一覧が表示されます。</p>
+            {selectedMonthExpenses.length === 0 ? (
+              <p className="empty-state">選択した月の支出はまだありません。</p>
             ) : null}
-            {expenses.map((expense) => (
+            {selectedMonthExpenses.map((expense) => (
               <article key={expense.id} className="expense-item">
                 <div>
                   <strong>{findChildName(expense.childId)} / {findLessonName(expense.lessonId)}</strong>

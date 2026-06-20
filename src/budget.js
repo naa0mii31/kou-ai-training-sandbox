@@ -26,6 +26,16 @@ export function totalExpenses(expenses) {
   return expenses.reduce((sum, expense) => sum + normalizeAmount(expense.amount), 0);
 }
 
+export function filterByMonth(expenses, month) {
+  const normalizedMonth = String(month || "").trim();
+
+  return expenses.filter((expense) => String(expense.paidAt || "").slice(0, 7) === normalizedMonth);
+}
+
+export function totalByMonth(expenses, month) {
+  return totalExpenses(filterByMonth(expenses, month));
+}
+
 function normalizeRequiredString(value, fieldName) {
   const normalizedValue = String(value || "").trim();
 
