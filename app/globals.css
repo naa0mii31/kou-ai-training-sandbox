@@ -28,7 +28,7 @@ select {
 }
 
 button {
-  min-height: 42px;
+  min-height: 44px;
   border: 0;
   border-radius: 8px;
   background: var(--accent);
@@ -44,7 +44,7 @@ button:hover {
 input,
 select {
   width: 100%;
-  min-height: 42px;
+  min-height: 44px;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: #fff;
@@ -348,6 +348,7 @@ h2 {
 .child-total-list,
 .lesson-total-list {
   display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
 }
 
@@ -360,6 +361,7 @@ h2 {
   border: 1px solid var(--line);
   border-radius: 8px;
   padding: 14px;
+  background: #fff;
 }
 
 .child-total-item span,
@@ -451,7 +453,107 @@ h2 {
   .expense-form,
   .lesson-form,
   .month-summary,
+  .child-total-list,
+  .lesson-total-list,
   .lesson-summary {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  body {
+    font-size: 15px;
+  }
+
+  .page-shell {
+    width: min(100% - 20px, 480px);
+    padding: 10px 0 28px;
+  }
+
+  .workspace-grid,
+  .roadmap-band,
+  .intro-band {
+    display: none;
+  }
+
+  .app-band {
+    margin-top: 0;
+    padding: 14px;
+  }
+
+  .panel-heading {
+    margin-bottom: 10px;
+  }
+
+  h2 {
+    font-size: 1.15rem;
+  }
+
+  .lesson-layout,
+  .children-list,
+  .expense-list {
+    gap: 8px;
+  }
+
+  .child-form,
+  .lesson-form,
+  .expense-form,
+  .month-summary {
+    gap: 10px;
+  }
+
+  .lesson-summary div,
+  .monthly-total {
+    padding: 14px;
+  }
+
+  .lesson-summary strong {
+    font-size: 1.5rem;
+  }
+
+  .monthly-total strong {
+    font-size: 2rem;
+  }
+
+  .expense-section {
+    margin-top: 18px;
+    padding-top: 18px;
+  }
+
+  .expense-form {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #f9fbf8;
+    padding: 12px;
+  }
+
+  .child-total-section,
+  .lesson-total-section {
+    margin-bottom: 14px;
+  }
+
+  .child-total-list,
+  .lesson-total-list {
+    gap: 8px;
+  }
+
+  .child-total-item,
+  .lesson-total-item {
+    padding: 10px 12px;
+  }
+
+  .child-total-item strong,
+  .lesson-total-item strong {
+    font-size: 1.05rem;
+    white-space: nowrap;
+  }
+
+  .lesson-total-item span {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .expense-item {
+    padding: 12px;
   }
 }
