@@ -47,6 +47,17 @@ export function summarizeByChild(expenses, children) {
   }), {});
 }
 
+export function totalByLesson(expenses, lessonId) {
+  return totalExpenses(expenses.filter((expense) => expense.lessonId === lessonId));
+}
+
+export function summarizeByLesson(expenses, lessons) {
+  return lessons.reduce((summary, lesson) => ({
+    ...summary,
+    [lesson.id]: totalByLesson(expenses, lesson.id)
+  }), {});
+}
+
 function normalizeRequiredString(value, fieldName) {
   const normalizedValue = String(value || "").trim();
 
