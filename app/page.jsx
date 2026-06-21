@@ -393,6 +393,7 @@ export default function Home() {
               金額
               <input
                 type="number"
+                inputMode="numeric"
                 min="0"
                 value={expenseForm.amount}
                 onChange={(event) => updateExpenseForm("amount", event.target.value)}
@@ -400,6 +401,9 @@ export default function Home() {
                 required
               />
             </label>
+            <button type="submit" disabled={!expenseForm.childId || !expenseForm.lessonId}>
+              支出を追加
+            </button>
             <label>
               日付
               <input
@@ -420,9 +424,6 @@ export default function Home() {
                 placeholder="例: チケット5回"
               />
             </label>
-            <button type="submit" disabled={!expenseForm.childId || !expenseForm.lessonId}>
-              支出を追加
-            </button>
           </form>
 
           <div className="expense-list">
