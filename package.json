@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "next dev",
-    "lint": "node --check src/tasks.js && node --check src/render.js && node --check src/budget.js && node --check src/lessons.js && node --check tests/tasks.test.js && node --check tests/budget.test.js && node --check tests/lessons.test.js",
+    "lint": "node --check src/tasks.js && node --check src/render.js && node --check src/budget.js && node --check src/lessons.js && node --check src/storage.js && node --check tests/tasks.test.js && node --check tests/budget.test.js && node --check tests/lessons.test.js && node --check tests/storage.test.js",
     "test": "node --test",
     "build": "next build"
   },

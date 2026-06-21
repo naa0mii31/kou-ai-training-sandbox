@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   createExpense,
   filterByMonth,
@@ -13,6 +13,10 @@ import {
   addLesson,
   listLessonsForChild
 } from "../src/lessons.js";
+import {
+  loadFromStorage,
+  saveToStorage
+} from "../src/storage.js";
 
 const roadmap = [
   "AIに3つだけ質問してもらい、自分向け家計簿のゴールを決める",
@@ -44,11 +48,15 @@ const minPaidAt = "2000-01-01";
 const maxPaidAt = "2100-12-31";
 const today = formatDateInputValue(new Date());
 const currentMonth = today.slice(0, 7);
+const childrenStorageKey = "narajigo:children";
+const lessonsStorageKey = "narajigo:lessons";
+const expensesStorageKey = "narajigo:expenses";
 
 export default function Home() {
   const [children, setChildren] = useState([]);
   const [lessons, setLessons] = useState([]);
   const [expenses, setExpenses] = useState([]);
+  const [isStorageReady, setIsStorageReady] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState(currentMonth);
   const [childName, setChildName] = useState("");
   const [lessonForms, setLessonForms] = useState({});
@@ -65,6 +73,31 @@ export default function Home() {
   const selectedMonthTotal = totalByMonth(expenses, selectedMonth);
   const childSummary = summarizeByChild(selectedMonthExpenses, children);
   const lessonSummary = summarizeByLesson(selectedMonthExpenses, lessons);
+
+  useEffect(() => {
+    setChildren(loadFromStorage(childrenStorageKey, []));
+    setLessons(loadFromStorage(lessonsStorageKey, []));
+    setExpenses(loadFromStorage(expensesStorageKey, []));
+    setIsStorageReady(true);
+  }, []);
+
+  useEffect(() => {
+    if (isStorageReady) {
+      saveToStorage(childrenStorageKey, children);
+    }
+  }, [children, isStorageReady]);
+
+  useEffect(() => {
+    if (isStorageReady) {
+      saveToStorage(lessonsStorageKey, lessons);
+    }
+  }, [lessons, isStorageReady]);
+
+  useEffect(() => {
+    if (isStorageReady) {
+      saveToStorage(expensesStorageKey, expenses);
+    }
+  }, [expenses, isStorageReady]);
 
   function registerChild(event) {
     event.preventDefault();
